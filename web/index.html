@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html manifest="cache.manifest">
+	<head>
+		<!-- Card info -->
+		<title>Last Letter</title>
+		<meta name="description" content="My amazing card!">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+		<meta name="kik-prefer" content="true">
+		<link rel="kik-icon" href="/img/icon.png">
+
+		<!-- Styles -->
+		<link rel="stylesheet" href="http://cdn.kik.com/app/1/default.css">
+		<link rel="stylesheet" href="/css/styles.css">
+	</head>
+
+	<body>
+		<!-- Pages -->
+
+		<div class="app-page" data-page="home">
+			<div class="app-topbar">
+				<div class="app-title">Last Letter</div>
+			</div>
+			<div class="app-content">
+				<div class="app-section">
+  					<div class="app-button" id = "start">
+  						Start a game
+  					</div>
+				</div>
+				<div class = "app-section" id = "active_games" >
+					<h2 id = 'active_title'>
+						You have no active games
+					</h2>
+
+					<ul class="app-list" id = 'active_list'>
+						<li></li>
+					</ul>
+				</div>
+			</div>
+		</div>
+
+		<div class="app-page" data-page="game">
+			<div class="app-topbar">
+				<div class="app-button left" data-back="true">Back</div>
+				<div class="app-title">Game</div>
+			</div>
+			<div class="app-content">
+				Game
+			</div>
+		</div>
+
+		<div class="app-page" data-page="create_game">
+			<div class="app-topbar">
+				<div class="app-button left" data-back="true">Back</div>
+				<div class="app-title" id = 'title'></div>
+			</div>
+			<div class="app-content">
+				<div class = "app-section" id = "active_games" >
+					<h2 class = "center">
+						Select a category
+					</h2>
+				</div>
+
+				<div class="app-section">
+					<ul id = 'category' class="app-list">
+	  					<li class="app-button" id = 'countries'>	Countries		</li>
+	  					<li class="app-button" id = 'movies'>		Movies			</li>
+	  					<li class="app-button" id = 'tvshows'>		TV Shows		</li>
+	  					<li class="app-button" id = 'cars'>			Car Companies	</li>
+					</ul>
+				</div>
+			</div>
+		</div>
+
+		<!-- Scripts -->
+		<script src="/zerver/API.js"></script>
+		<script src="http://zeptojs.com/zepto.min.js"></script>
+		<script src="lib/cards.js"></script>
+		<script src="http://cdn.kik.com/app/1/app.js"></script>
+		<script src="/js/main.js"></script>
+	</body>
+</html>
