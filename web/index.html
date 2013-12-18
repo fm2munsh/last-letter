@@ -11,6 +11,7 @@
 		<!-- Styles -->
 		<link rel="stylesheet" href="http://cdn.kik.com/app/1/default.css">
 		<link rel="stylesheet" href="/css/styles.css">
+		<link href='http://fonts.googleapis.com/css?family=Alegreya+Sans+SC' rel='stylesheet' type='text/css'>
 	</head>
 
 	<body>
@@ -22,19 +23,24 @@
 			</div>
 			<div class="app-content">
 				<div class="app-section">
-  					<div class="app-button" id = "start">
+  					<div class="app-button start-button" id = "start">
   						Start a game
   					</div>
 				</div>
-				<div class = "app-section" id = "active_games" >
-					<h2 id = 'active_title'>
-						You have no active games
-					</h2>
-
+				<div class = "app-section hidden" id = "active_games" >
+					<h3 class = "title-med">
+						Your active games
+					</h3>
 					<ul class="app-list" id = 'active_list'>
-						<li></li>
 					</ul>
 				</div>
+
+				<div class = "app-section hidden" id = "no_active" >
+					<h3 class = "title-small">
+						You currently have no active games
+					</h3>
+				</div>
+
 			</div>
 		</div>
 
@@ -44,7 +50,24 @@
 				<div class="app-title">Game</div>
 			</div>
 			<div class="app-content">
-				Game
+				<div class = 'app-section hidden' id = 'your_turn'>
+					<h3 class  = 'title-med'>
+						It's your turn!
+					</h3>
+					<p id = 'instructions'>
+					</p>
+					<input class="app-input" id = 'word' placeholder="Enter word here">
+					<div class="app-button" id = 'send'>Send</div>
+				</div>
+
+				<div class = 'app-section hidden' id = 'their_turn'>
+					<h3 class  = 'title-med'>
+						It's not your turn
+					</h3>
+					<p id = 'instructions'>
+					</p>
+				</div>
+
 			</div>
 		</div>
 
@@ -55,18 +78,16 @@
 			</div>
 			<div class="app-content">
 				<div class = "app-section" id = "active_games" >
-					<h2 class = "center">
+					<h3 class = "title-med">
 						Select a category
-					</h2>
-				</div>
-
-				<div class="app-section">
+					</h3>
 					<ul id = 'category' class="app-list">
-	  					<li class="app-button" id = 'countries'>	Countries		</li>
-	  					<li class="app-button" id = 'movies'>		Movies			</li>
-	  					<li class="app-button" id = 'tvshows'>		TV Shows		</li>
-	  					<li class="app-button" id = 'cars'>			Car Companies	</li>
+	  					<li class="app-button" id = 'Countries'>	Countries		</li>
+	  					<li class="app-button" id = 'Movies'>		Movies			</li>
+	  					<li class="app-button" id = 'TV Shows'>		TV Shows		</li>
+	  					<li class="app-button" id = 'Cars'>			Car Companies	</li>
 					</ul>
+					<br>
 				</div>
 			</div>
 		</div>

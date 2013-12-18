@@ -1,4 +1,50 @@
 /* put stuff here */
+.body {
+	font-family: 'Alegreya Sans SC', sans-serif;
+}
+.app-title { 
+	font-family: 'Alegreya Sans SC', sans-serif;
+}
+.start-button {
+	padding: 5%;
+	margin: 5%;
+	font-size: 1.5em;
+	font-family: 'Alegreya Sans SC', sans-serif;
+	border-radius: 50px;
+}
+
 .center { 
 	text-align: center;
+}
+.hidden { 
+	display: none;
+}
+
+.title-med { 
+	text-align: center;
+	font-family: 'Alegreya Sans SC', sans-serif;
+	border-bottom: 1px solid #EEE;
+	padding-bottom: 5%;
+}
+
+.title-small { 
+	text-align: center;
+	font-family: 'Alegreya Sans SC', sans-serif;
+}
+
+.app-list { 
+	font-family: 'Alegreya Sans SC', sans-serif;
+}
+
+p { 
+	font-family: 'Alegreya Sans SC', sans-serif;
+	padding: 5%;
+}
+
+.app-input {
+	font-family: 'Alegreya Sans SC', sans-serif;
+	padding: 5%;
+}
+.app-button { 
+	font-family: 'Alegreya Sans SC', sans-serif;
 }

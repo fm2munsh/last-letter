@@ -1,17 +1,37 @@
 window.cache = {};
 
-(function (App) {
+(function (App, cards) {
+
+	cards.ready(function(){
+		if (cards.browser.linkData){
+			API.log(cards.browser.linkData);
+			var activeGame = cards.browser.linkData.activeGame;
+			if (!!activeGame) {
+				App.load('game', activeGame);
+			}
+		}
+	});
+
+
 	App.populator('home', function (page) {
 		cards.kik.getUser(function (user) {
 			if ( !user ) {
 				// action was cancelled by user
 				return;
 			}
-			window.cache.user = user;
-
 			API.getActiveGames(user, function(err, actives){
-				console.log("ACTIVES");
 				console.log(actives);
+				actives.forEach(function(game){
+					var el = '';
+					if (game.turn_user === user.username){
+						el = '<li class="app-button" id = ' + game._id + '>' + game.category + '</li>';
+					} else {
+						el = '<li class="app-button" id = ' + game._id + '>' + game.category + '</li>';
+					}
+					$(page).find('#active_list').append(el);
+				});
+				if (actives.length > 0) $(page).find('#active_games').removeClass('hidden');
+				else					$(page).find('#no_active').removeClass('hidden');
 			});
 
 			$(page)
@@ -29,6 +49,32 @@ window.cache = {};
 
 	App.populator('game', function (page, activeGame) {
 		console.log(activeGame);
+		cards.kik.getUser(function (user) {
+			if ( activeGame.turn_user === user.username ) {
+				$(page).find('#your_turn').removeClass('hidden');
+				if ( activeGame.turn_num === 1 ) {
+					var instructions = 'Send any word from the category ' + activeGame.category + ' to get started';
+					$(page).find('#instructions').append(instructions);
+				}
+
+				$(page).find('#send').click(function(event){
+					var word = $(page).find('#word').val();
+					API.checkWord(activeGame, word, function(response){
+						if (response === "error") {
+							console.log("wrong word ~~~~~~~~~~~");
+						} else {
+							cards.kik.send(response.turn_user, {
+								"title"		: "Your turn in Last Letter"	,
+								"text"		: word							,
+								"linkData"	: { "activeGame" : response }	,
+							});
+						}
+					});
+				});
+			} else {
+				$(page).find('#their_turn').removeClass('hidden');
+			}
+		});
 	});
 
 	App.populator('create_game', function(page, data) {
@@ -55,4 +101,4 @@ window.cache = {};
 	} catch (err) {
 		App.load('home');
 	}
-})(App);
+})(App, cards);
