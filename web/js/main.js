@@ -24,14 +24,25 @@ window.cache = {};
 				actives.forEach(function(game){
 					var el = '';
 					if (game.turn_user === user.username){
-						el = '<li class="app-button" id = ' + game._id + '>' + game.category + '</li>';
+						el = '<li class="app-button active_game" id = ' + game._id + '> <img src="cdn.kik.com/user/pic/' + game.non_turn_user + '" class = "user_icon"> <span class = "turn_info"> Your turn against ' + game.non_turn_user + '</span></li>';
 					} else {
-						el = '<li class="app-button" id = ' + game._id + '>' + game.category + '</li>';
+						el = '<li class="app-button active_game" id = ' + game._id + '> <img src="http://cdn.kik.com/user/pic/' + game.turn_user + '" class = "user_icon"> <span class = "turn_info"> ' + game.turn_user + "'s turn</span></li>";
 					}
 					$(page).find('#active_list').append(el);
 				});
 				if (actives.length > 0) $(page).find('#active_games').removeClass('hidden');
 				else					$(page).find('#no_active').removeClass('hidden');
+
+				$(page)
+					.find('#active_list li')
+					.on('click', function(event){
+						var id = $(this).attr('id');
+						console.log(id);
+						API.getActiveGame(id, function(activeGame) {
+							console.log("Get active Game ~~~~~~");
+							App.load('game', activeGame);
+						});
+					});
 			});
 
 			$(page)
@@ -50,6 +61,7 @@ window.cache = {};
 	App.populator('game', function (page, activeGame) {
 		console.log(activeGame);
 		cards.kik.getUser(function (user) {
+
 			if ( activeGame.turn_user === user.username ) {
 				$(page).find('#your_turn').removeClass('hidden');
 				if ( activeGame.turn_num === 1 ) {
@@ -74,6 +86,12 @@ window.cache = {};
 			} else {
 				$(page).find('#their_turn').removeClass('hidden');
 			}
+
+			$(page).find('#turn_user').attr("src", "http://cdn.kik.com/user/pic/"+activeGame.turn_user);
+			$(page).find('#non_turn_user').attr("src", "http://cdn.kik.com/user/pic/"+activeGame.non_turn_user);
+			$(page).find('#turn_num').html("Turn "+activeGame.turn_num);
+			$(page).find('#turn_user_lives').html("Lives left "+activeGame.turn_user_lives);
+			$(page).find('#non_turn_user_lives').html("Lives left "+activeGame.non_turn_user_lives);
 		});
 	});
 
@@ -88,7 +106,7 @@ window.cache = {};
 		$(page)
 			.find('#category li')
 			.on('click', function(event){
-				var category = $(event.target).attr('id');
+				var category = $(this).attr('id');
 					console.log({ "user": user.username, "opponent" : opponent.username, "category" : category });
 				API.createGame({ "user": user, "opponent" : opponent, "category" : category }, function(activeGame) {
 					App.load('game', activeGame);

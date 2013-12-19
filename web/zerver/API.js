@@ -24,13 +24,15 @@ var UserSchema = new mongoose.Schema({
 });
 
 var ActiveGameSchema = new mongoose.Schema({
-	users			: [],
-	turn_num		: Number,
-	turn_user		: String,
-	non_turn_user	: String,
-	category		: String,
-	current_word	: String,
-	past_words		: []
+	users				: [],
+	turn_num			: Number,
+	turn_user			: String,
+	non_turn_user		: String,
+	non_turn_user_lives	: Number,
+	turn_user_lives		: Number,
+	category			: String,
+	current_word		: String,
+	past_words			: []
 });
 
 var User		= mongoose.model('User', UserSchema);
@@ -38,13 +40,15 @@ var ActiveGame	= mongoose.model('ActiveGame', ActiveGameSchema);
 
 exports.createGame = function(data, callback) {
 	var newGame = new ActiveGame({
-			users			:  [data.user.username, data.opponent.username]	,
-			turn_num		: 1												,
-			turn_user		: data.user.username							,
-			non_turn_user	: data.opponent.username						,
-			category		: data.category									,
-			current_word	: ""											,
-			past_words		: []
+			users				:  [data.user.username, data.opponent.username]	,
+			turn_num			: 1												,
+			turn_user			: data.user.username							,
+			turn_user_lives		: 3												,
+			non_turn_user		: data.opponent.username						,
+			non_turn_user_lives	: 3												,
+			category			: data.category									,
+			current_word		: ""											,
+			past_words			: []
     });
 
     newGame.save(function(err){
@@ -68,24 +72,30 @@ exports.checkWord = function(activeGame, word, callback) {
 				callback(a);
 			});
 		} else {
-			callback("error");
+			callback("Invalid word, try again");
 		}
 	} else {
 		// Check if first letter of this word is the same as the last letter from last word
 		if (activeGame.current_word[activeGame.current_word.length-1] === word[0]) {
-			// Check if word is in dictionary for this category
-			if (!!dictionary[activeGame.category.split(' ').join('').toLowerCase()][word.toLowerCase()]) {
-				ActiveGame.findOne({ _id : activeGame._id }, function(err, a) {
-					a.current_word	= word;
-					a.turn_user		= activeGame.non_turn_user;
-					a.non_turn_user = activeGame.turn_user;
-					a.past_words.push(word);
-					a.turn_num		+= 1;
-					a.save();
-					callback(a);
-				});
+			if (activeGame.past_words.indexOf(word) < 0) {
+				// Check if word is in dictionary for this category
+				if (validateWord(word, activeGame.category)) {
+					ActiveGame.findOne({ _id : activeGame._id }, function(err, a) {
+						a.current_word			= word;
+						a.turn_user				= activeGame.non_turn_user;
+						a.non_turn_user			= activeGame.turn_user;
+						a.turn_user_lives		= activeGame.non_turn_user_lives;
+						a.non_turn_user_lives	= activeGame.turn_user_lives;
+						a.past_words.push(word);
+						a.turn_num		+= 1;
+						a.save();
+						callback(a);
+					});
+				} else {
+					callback("error");
+				}
 			} else {
-				callback("error");
+					callback("error");
 			}
 		} else {
 			callback("error");
@@ -94,8 +104,8 @@ exports.checkWord = function(activeGame, word, callback) {
 
 };
 
-exports.countries = function(country) {
-	console.log(!!countries[country]);
+exports.validateWord = function(word, category) {
+	return !!dictionary[category.split(' ').join('').toLowerCase()][word.toLowerCase()];
 };
 
 exports.getActiveGames = function(user, callback) {
@@ -103,6 +113,14 @@ exports.getActiveGames = function(user, callback) {
         .find()
         .where('users').in([user.username])
         .exec(callback);
+};
+
+exports.getActiveGame = function(id, callback) {
+	ActiveGame.findOne({ _id : id }, function(err, active){
+		console.log(err);
+		console.log(active);
+		callback(active);
+	});
 };
 
 exports.allgames = function(callback) {

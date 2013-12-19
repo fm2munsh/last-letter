@@ -27,10 +27,12 @@
   						Start a game
   					</div>
 				</div>
+
 				<div class = "app-section hidden" id = "active_games" >
 					<h3 class = "title-med">
 						Your active games
 					</h3>
+
 					<ul class="app-list" id = 'active_list'>
 					</ul>
 				</div>
@@ -40,7 +42,33 @@
 						You currently have no active games
 					</h3>
 				</div>
+				<div class="app-section">
+					<div class = "footer app-button" data-target="instructions" > How to play? </div>
+				</div>
+			</div>
+		</div>
 
+		<div class = 'app-page' data-page="instructions">
+			<div class="app-topbar">
+				<div class="app-button left" data-back="true">Back</div>
+				<div class="app-title">How to play</div>
+			</div>
+
+			<div class = 'app-section'>
+				<h3 class = 'title-med'> Overview </h3>
+				<p>
+					Last letter is a 2-player word game that runs through the kik messenger. The game requires one person to pick a category and start off by sending a word from that category to his opponent. The opponent then has to respond with a word from the same category that starts with the last letter from the previous word.
+				</p>
+
+				<h3 class = 'title-med'> Rules </h3>
+				<p>
+					Each player is given 3 "lives", a player loses a life when he enters a word that is not part of the category, does not start with last letter of the previous word or has already been used in the current game. The game ends when a player loses all 3 of his lives.
+				</p>
+
+				<h3 class = 'title-med'> Categories </h3>
+				<p>
+					Currently the categories supported include: Countries and the Dictionary.
+				</p>
 			</div>
 		</div>
 
@@ -50,6 +78,22 @@
 				<div class="app-title">Game</div>
 			</div>
 			<div class="app-content">
+
+				<div class = 'game_info'>
+
+					<h3 id = 'turn_num' class = "title-med">
+					</h3>
+
+					<div class = 'vs_info' >
+						<span class = 'lives' id = 'turn_user_lives'> </span>
+						<img class = 'user_icon_ig' id = 'turn_user'> 
+						<span class = 'vs' > vs </span> 
+						<img class = 'user_icon_ig' id = 'non_turn_user'> 
+						<span class = 'lives' id = 'non_turn_user_lives'> </span>
+					</div>
+
+				</div>
+
 				<div class = 'app-section hidden' id = 'your_turn'>
 					<h3 class  = 'title-med'>
 						It's your turn!
