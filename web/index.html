@@ -9,7 +9,7 @@
 		<link rel="kik-icon" href="/img/icon.png">
 
 		<!-- Styles -->
-		<link rel="stylesheet" href="http://cdn.kik.com/app/1/default.css">
+		<link rel="stylesheet" href="/css/default.css">
 		<link rel="stylesheet" href="/css/styles.css">
 		<link href='http://fonts.googleapis.com/css?family=Alegreya+Sans+SC' rel='stylesheet' type='text/css'>
 	</head>
@@ -18,7 +18,7 @@
 		<!-- Pages -->
 
 		<div class="app-page" data-page="home">
-			<div class="app-topbar">
+			<div class="app-topbar green">
 				<div class="app-title">Last Letter</div>
 			</div>
 			<div class="app-content">
@@ -49,7 +49,7 @@
 		</div>
 
 		<div class = 'app-page' data-page="instructions">
-			<div class="app-topbar">
+			<div class="app-topbar green">
 				<div class="app-button left" data-back="true">Back</div>
 				<div class="app-title">How to play</div>
 			</div>
@@ -73,11 +73,20 @@
 		</div>
 
 		<div class="app-page" data-page="game">
-			<div class="app-topbar">
+			<div class="app-topbar green">
 				<div class="app-button left" data-back="true">Back</div>
 				<div class="app-title">Game</div>
 			</div>
 			<div class="app-content">
+
+				<div class = 'app-section'>
+					<div class = 'app-button' id = 'show_used'> 
+						Show used words
+					</div>
+					<ul class = 'app-list hidden' id = 'used'>
+
+					</ul>
+				</div>
 
 				<div class = 'game_info'>
 
@@ -105,18 +114,16 @@
 				</div>
 
 				<div class = 'app-section hidden' id = 'their_turn'>
-					<h3 class  = 'title-med'>
+					<h3 class  = 'title-small'>
 						It's not your turn
 					</h3>
-					<p id = 'instructions'>
-					</p>
 				</div>
 
 			</div>
 		</div>
 
 		<div class="app-page" data-page="create_game">
-			<div class="app-topbar">
+			<div class="app-topbar green">
 				<div class="app-button left" data-back="true">Back</div>
 				<div class="app-title" id = 'title'></div>
 			</div>

@@ -114,10 +114,18 @@ p {
 	background: #FFF;
 }
 
-.app-topbar {
+.app-topbar .green {
 	background-color: #58b28d;
+	-webkit-box-shadow: inset 0 -1px 0 #58b28d,0 1px 0 rgba(0,0,0,.1),0 1px 7px rgba(0,0,0,.18);
+	box-shadow: inset 0 -1px 0 #58b28d,0 1px 0 rgba(0,0,0,.1),0 1px 7px rgba(0,0,0,.18);
+	color: #f3f4f5;
+	border: 0;
+}
+
+.app-ios .app-topbar .green {
+	background-color: #58b28d!important;
 	-webkit-box-shadow: inset 0 -1px 0 #58b28d,0 1px 0 rgba(0,0,0,.1),0 1px 7px rgba(0,0,0,.18)!important;
 	box-shadow: inset 0 -1px 0 #58b28d,0 1px 0 rgba(0,0,0,.1),0 1px 7px rgba(0,0,0,.18)!important;
-	color: #f3f4f5;
+	color: #f3f4f5!important;
 	border: 0;
 }

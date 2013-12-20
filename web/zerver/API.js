@@ -32,6 +32,8 @@ var ActiveGameSchema = new mongoose.Schema({
 	turn_user_lives		: Number,
 	category			: String,
 	current_word		: String,
+	winner				: String,
+	complete			: Boolean,
 	past_words			: []
 });
 
@@ -48,6 +50,8 @@ exports.createGame = function(data, callback) {
 			non_turn_user_lives	: 3												,
 			category			: data.category									,
 			current_word		: ""											,
+			winner				: ""											,
+			complete			: false											,
 			past_words			: []
     });
 
@@ -59,9 +63,12 @@ exports.createGame = function(data, callback) {
     });
 };
 exports.checkWord = function(activeGame, word, callback) {
+	word = word.toLowerCase();
 	// If its the first turn then no need to check stuff
 	if (activeGame.turn_num === 1){
+		console.log("turn 1");
 		if (!!dictionary[activeGame.category.split(' ').join('').toLowerCase()][word.toLowerCase()]) {
+			console.log("valid word");
 			ActiveGame.findOne({ _id : activeGame._id }, function(err, a) {
 				a.current_word	= word;
 				a.turn_user		= activeGame.non_turn_user;
@@ -72,21 +79,28 @@ exports.checkWord = function(activeGame, word, callback) {
 				callback(a);
 			});
 		} else {
-			callback("Invalid word, try again");
+			callback("error");
 		}
 	} else {
+		console.log("FIRST LETTER ~~~~~~~~~~~~~~");
+		console.log(activeGame.current_word[activeGame.current_word.length-1] === word[0]);
+		console.log(word);
+		console.log(activeGame.current_word);
 		// Check if first letter of this word is the same as the last letter from last word
 		if (activeGame.current_word[activeGame.current_word.length-1] === word[0]) {
-			if (activeGame.past_words.indexOf(word) < 0) {
+			console.log("valid first letter");
+			if (activeGame.past_words.indexOf(word.toLowerCase()) < 0) {
+				console.log("Word has not been used");
 				// Check if word is in dictionary for this category
 				if (validateWord(word, activeGame.category)) {
+					console.log("valid word");
 					ActiveGame.findOne({ _id : activeGame._id }, function(err, a) {
 						a.current_word			= word;
 						a.turn_user				= activeGame.non_turn_user;
 						a.non_turn_user			= activeGame.turn_user;
 						a.turn_user_lives		= activeGame.non_turn_user_lives;
 						a.non_turn_user_lives	= activeGame.turn_user_lives;
-						a.past_words.push(word);
+						a.past_words.push(word.toLowerCase());
 						a.turn_num		+= 1;
 						a.save();
 						callback(a);
@@ -104,13 +118,35 @@ exports.checkWord = function(activeGame, word, callback) {
 
 };
 
-exports.validateWord = function(word, category) {
+var validateWord = exports.validateWord = function(word, category) {
 	return !!dictionary[category.split(' ').join('').toLowerCase()][word.toLowerCase()];
+};
+
+exports.updateActive = function(active, callback) {
+	ActiveGame.findOne({ _id : active._id }, function(err, a){
+		for (var prop in active){
+			a[prop] = active[prop];
+		}
+		a.save();
+		callback(a);
+	});
+};
+
+exports.endGame = function(active, callback) {
+	ActiveGame.findOne({ _id : active._id }, function(err, a){
+		for (var prop in active){
+			a[prop] = active[prop];
+		}
+		a.winner	= a.non_turn_user;
+		a.complete	= true;
+		a.save();
+		callback(a);
+	});
 };
 
 exports.getActiveGames = function(user, callback) {
 	ActiveGame
-        .find()
+        .find({ complete : false })
         .where('users').in([user.username])
         .exec(callback);
 };
@@ -148,6 +184,6 @@ exports.clearAll = function() {
 
 
 exports.log = function(log){
-	console.log("SERVER LOG");
+	console.log("~~~~~~~~~~~~~~~~~~~~~~~~~SERVER LOG~~~~~~~~~~~~~~~~~~~~~~~~~");
 	console.log(log);
 };

@@ -31,7 +31,7 @@ window.cache = {};
 					$(page).find('#active_list').append(el);
 				});
 				if (actives.length > 0) $(page).find('#active_games').removeClass('hidden');
-				else					$(page).find('#no_active').removeClass('hidden');
+				else					$(page).find('#no_active').removeClass('2');
 
 				$(page)
 					.find('#active_list li')
@@ -64,16 +64,50 @@ window.cache = {};
 
 			if ( activeGame.turn_user === user.username ) {
 				$(page).find('#your_turn').removeClass('hidden');
+				var instructions;
 				if ( activeGame.turn_num === 1 ) {
-					var instructions = 'Send any word from the category ' + activeGame.category + ' to get started';
-					$(page).find('#instructions').append(instructions);
+					instructions = 'Send any word from the category ' + activeGame.category + ' to get started';
+				} else {
+					instructions = activeGame.non_turn_user + ' has sent the word ' + activeGame.current_word + ' Send a word starting with the letter "' + activeGame.current_word[activeGame.current_word.length-1] + '" from the category ' + activeGame.category;
 				}
+				$(page).find('#instructions').append(instructions);
 
 				$(page).find('#send').click(function(event){
 					var word = $(page).find('#word').val();
 					API.checkWord(activeGame, word, function(response){
 						if (response === "error") {
-							console.log("wrong word ~~~~~~~~~~~");
+							var text = '';
+
+							API.log(JSON.stringify(activeGame));
+							API.log(response);
+
+							if (activeGame.turn_num > 0) {
+								if (activeGame.turn_user_lives === 1) {
+									API.endGame(activeGame, function(response){
+										activeGame = response;
+										text = 'You have ran out of lives, you lose';
+									});
+								} else {
+									activeGame.turn_user_lives -= 1;
+									API.updateActive(activeGame, function(response){
+										activeGame = response;
+										text = 'You entered an invalid word, you have lost 1 life, try again';
+										$(page).find('#turn_user_lives').html(activeGame.turn_user_lives + ' Lives');
+									});
+								}
+							}
+							
+							API.log(text);
+
+							App.dialog({
+								title   : "Invalid word"	,
+								text    : text				,
+								success : 'Ok'				,
+							}, function (status) {
+								if (activeGame.complete) {
+									App.load('home');
+								}
+							});
 						} else {
 							cards.kik.send(response.turn_user, {
 								"title"		: "Your turn in Last Letter"	,
@@ -90,8 +124,15 @@ window.cache = {};
 			$(page).find('#turn_user').attr("src", "http://cdn.kik.com/user/pic/"+activeGame.turn_user);
 			$(page).find('#non_turn_user').attr("src", "http://cdn.kik.com/user/pic/"+activeGame.non_turn_user);
 			$(page).find('#turn_num').html("Turn "+activeGame.turn_num);
-			$(page).find('#turn_user_lives').html("Lives left "+activeGame.turn_user_lives);
-			$(page).find('#non_turn_user_lives').html("Lives left "+activeGame.non_turn_user_lives);
+			$(page).find('#turn_user_lives').html(activeGame.turn_user_lives + ' Lives');
+			$(page).find('#non_turn_user_lives').html(activeGame.non_turn_user_lives + ' Lives');
+			activeGame.past_words.forEach(function(word){
+				$(page).find('#used').append('<li> '+ word + ' </li>');
+			});
+
+			$(page).find('#show_used').on('click', function(event){
+				$(page).find('#used').toggle();
+			});
 		});
 	});
 
@@ -101,7 +142,7 @@ window.cache = {};
 		console.log(opponent);
 		$(page)
 			.find('#title')
-			.html('Creating game with ' + opponent.username);
+			.html('Creating game');
 
 		$(page)
 			.find('#category li')
